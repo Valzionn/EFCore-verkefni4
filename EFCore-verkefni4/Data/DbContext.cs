@@ -20,39 +20,21 @@ namespace EFCore_verkefni4.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Many-to-Many relationship between Teacher and Subject
+            // Explicitly configure the composite key for SubjectTeacher
             modelBuilder.Entity<SubjectTeacher>()
                 .HasKey(st => new { st.SubjectId, st.TeacherId });
 
-            modelBuilder.Entity<SubjectTeacher>()
-                .HasOne(st => st.Subject)
-                .WithMany(s => s.SubjectTeachers)
-                .HasForeignKey(st => st.SubjectId);
-
-            modelBuilder.Entity<SubjectTeacher>()
-                .HasOne(st => st.Teacher)
-                .WithMany(t => t.SubjectTeachers)
-                .HasForeignKey(st => st.TeacherId);
-
-            // One-to-Many relationship between Student and Group
-            modelBuilder.Entity<Student>()
-                .HasOne(s => s.Group)
-                .WithMany(g => g.Students)
-                .HasForeignKey(s => s.GroupId);
-
-            // One-to-Many relationship between Mark and Student
+            // Optional: Explicit configuration of relationships (if not handled fully by Data Annotations)
             modelBuilder.Entity<Mark>()
                 .HasOne(m => m.Student)
                 .WithMany(s => s.Marks)
                 .HasForeignKey(m => m.StudentId);
 
-            // One-to-Many relationship between Mark and Subject
             modelBuilder.Entity<Mark>()
                 .HasOne(m => m.Subject)
                 .WithMany()
                 .HasForeignKey(m => m.SubjectId);
         }
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
